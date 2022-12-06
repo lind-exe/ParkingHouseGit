@@ -11,6 +11,7 @@
 
             Console.WriteLine("Hej2");
             Console.WriteLine("Hej 3");
+            Console.WriteLine("Hallå Hallå");
         }
     }
 }
