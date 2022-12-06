@@ -42,5 +42,47 @@ namespace ParkingHouse.Models
             }
             return affectedRows;
         }
+
+        public static List<Models.ParkingHouse> AllParkingHouses()
+        {
+            var sql = "SELECT * FROM ParkingHouses";
+            var houses = new List<Models.ParkingHouse>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
+                connection.Close();
+            }
+            return houses;
+        }
+        public static int InsertParkingHouse(Models.ParkingHouse ph)
+        {
+            var sql = $"insert into ParkingHouses(HouseName) values ('{ph.HouseName}')";
+
+            int affectedRows = 0;
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                affectedRows = connection.Execute(sql);
+                connection.Close();
+            }
+            return affectedRows;
+        }
+        //public static int InsertParkingSlot(Models.ParkingSlot ph)
+        //{
+        //    var sql = $"insert into ParkingSlot(HouseName) values ('{ph.HouseName}')";
+
+        //    int affectedRows = 0;
+
+        //    using (var connection = new SqlConnection(connString))
+        //    {
+        //        connection.Open();
+        //        affectedRows = connection.Execute(sql);
+        //        connection.Close();
+        //    }
+        //    return affectedRows;
+        //}
     }
 }

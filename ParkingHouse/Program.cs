@@ -18,7 +18,8 @@ namespace ParkingHouse
             while (runProgram)
             {
                 Console.Clear();
-                Console.WriteLine($"1. Visa städer\n2. Lägg till stad\nA. Avsluta program");
+                Console.WriteLine($"1. Visa städer\n2. Lägg till stad\n3. För att visar parkeringhus\n4. För att lägga till ett parkeringhus" +
+                    $"\nA. Avsluta program");
                 var key = Console.ReadKey(true);
                 switch (key.KeyChar)
                 {
@@ -39,6 +40,24 @@ namespace ParkingHouse
                         };
                         int rowAffected = DatabasDapper.InsertCity(newCity);
                         Console.WriteLine(rowAffected + " stad har lagts till");
+                        break;
+                    case '3':
+                        Console.Clear();
+                        var newHouses=DatabasDapper.AllParkingHouses();
+                        foreach(Models.ParkingHouse pHouse in newHouses)
+                        {
+                            Console.WriteLine($"{pHouse.Id}\t{pHouse.HouseName}");
+                        }
+                        break;
+                    case '4':
+                        Console.Clear();
+                        Console.Write("Ange vad parkeringhuset heter: ");
+                        var newParkinghouse = new Models.ParkingHouse
+                        {
+                            HouseName = Console.ReadLine()
+                        };
+                        int rowAffected1 =DatabasDapper.InsertParkingHouse(newParkinghouse);
+                        Console.WriteLine(rowAffected1+" parkeringhus har lagts till.");
                         break;
                     case 'A':
                     case 'a':
