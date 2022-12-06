@@ -8,6 +8,8 @@
 
 
             Console.WriteLine("Hejhej");
+
+            Console.WriteLine("Hej2");
         }
     }
 }
