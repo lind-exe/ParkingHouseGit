@@ -70,19 +70,19 @@ namespace ParkingHouse.Models
             }
             return affectedRows;
         }
-        //public static int InsertParkingSlot(Models.ParkingSlot ph)
-        //{
-        //    var sql = $"insert into ParkingSlot(HouseName) values ('{ph.HouseName}')";
+        public static int InsertParkingSlot(Models.ParkingSlot ph)
+        {
+            var sql = $"insert into ParkingSlot(HouseName) values ('{ph.HouseName}')";
 
-        //    int affectedRows = 0;
+            int affectedRows = 0;
 
-        //    using (var connection = new SqlConnection(connString))
-        //    {
-        //        connection.Open();
-        //        affectedRows = connection.Execute(sql);
-        //        connection.Close();
-        //    }
-        //    return affectedRows;
-        //}
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                affectedRows = connection.Execute(sql);
+                connection.Close();
+            }
+            return affectedRows;
+        }
     }
 }
