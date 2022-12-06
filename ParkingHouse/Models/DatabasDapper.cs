@@ -70,9 +70,23 @@ namespace ParkingHouse.Models
             }
             return affectedRows;
         }
-        public static int InsertParkingSlot(Models.ParkingSlot ph)
+
+        public static List<Models.ParkingSlot> AllParkingSlots(int input)
         {
-            var sql = $"insert into ParkingSlot(HouseName) values ('{ph.HouseName}')";
+            var sql = $"SELECT * FROM ParkingSlots WHERE ParkingHouseId = {input}";
+            var slots = new List<Models.ParkingSlot>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                slots = connection.Query<Models.ParkingSlot>(sql).ToList();
+                connection.Close();
+            }
+            return slots;
+        }
+        public static int InsertParkingSlot(Models.ParkingSlot ps)
+        {
+            var sql = $"insert into ParkingSlots(SlotNumber, ElectricOutlet, ParkingHouseId) values ('{ps.SlotNumber}', '{ps.ElectricOutlet}', '{ps.ParkingHouseId}')";
 
             int affectedRows = 0;
 
