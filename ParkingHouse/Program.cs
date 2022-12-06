@@ -10,6 +10,7 @@
             Console.WriteLine("Hejhej");
 
             Console.WriteLine("Hej2");
+            Console.WriteLine("Hej 3");
         }
     }
 }
