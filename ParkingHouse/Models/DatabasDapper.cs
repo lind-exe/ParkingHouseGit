@@ -97,6 +97,8 @@ namespace ParkingHouse.Models
             }
             return slots;
         }
+
+        // ÄNDRA HÄR! TA BORT STJÄRNA OCH VÄLJ ETT ALIAS FÖR ID OM VI VILL HA FLER.
         public static List<Models.Freespots> AllParkingSlots2(int input)
         {
             var sql = $"SELECT * FROM ParkingSlots PS\r\nfull JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
@@ -165,10 +167,26 @@ namespace ParkingHouse.Models
             }
             return affectedRows;
         }
+
+        public static int CreateCars(string input1, string input2, string input3)
+        {
+            int affectedRows = 0;
+
+            string sql = $"INSERT INTO Cars(Plate, Make, Color) " +
+                $"VALUES ('{input1}', '{input2}', '{input3}')";
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                affectedRows = connection.Execute(sql);
+                connection.Close();
+            }
+
+            return affectedRows;
+        }
         public static List<Models.CarUnpark> ListParkedCars()
         {
-            var sql = $"SELECT \r\n    *\r\nFROM Cars C\r\n    Full JOIN ParkingSlots PS ON C.ParkingSlotsId = PS.Id\r\n    " +
-                $"JOIN ParkingHouses PH ON PH.Id = PS.ParkingHouseId\r\n    JOIN Cities CI ON CI.Id = PH.CityId\r\n\tWhere C.ParkingSlotsId > 0";
+            var sql = "SELECT \r\n    C.Id,\r\n\tC.Plate,\r\n\tC.Make,\r\n\tC.Color,\r\n\tC.ParkingSlotsId,\r\n\tPH.HouseName,\r\n\tCI.CityName\r\nFROM Cars C\r\n    Full JOIN ParkingSlots PS ON C.ParkingSlotsId = PS.Id\r\n    JOIN ParkingHouses PH ON PH.Id = PS.ParkingHouseId\r\n    JOIN Cities CI ON CI.Id = PH.CityId\r\n    WHERE C.ParkingSlotsId > 0";
             var cars =new List<Models.CarUnpark>();
 
             using (var connection = new SqlConnection(connString))

@@ -129,20 +129,34 @@ namespace ParkingHouse
                     break;
                 case '2':
                     var cars2 = DatabasDapper.ListParkedCars();
-                    foreach(var car in cars2)
+                    foreach(Models.CarUnpark car in cars2)
                     {
-                        Console.WriteLine($"{car.ParkingSlotsId}\t{car.Plate}\t{car.Make}\t{car.Color}\t{car.SlotNumber}\t{car.HouseName}\t{car.CityName}");
+                        Console.WriteLine($"{car.Id}\t{car.Plate}\t{car.Make}\t{car.Color}\t{car.ParkingSlotsId}\t{car.HouseName}\t{car.CityName}");
                     }
-                    Console.WriteLine("Input the parkingslot to unpark the car.");
+                    Console.Write("Input the plate[ABC123] to unpark the car: ");
                     string input3 = Console.ReadLine().ToUpper();
                     int affectedRows = 0;
                     affectedRows=DatabasDapper.UnParkCar(input3);
                     Console.WriteLine($"Rows affected: " +affectedRows);
                     break;
                 case '3':
-
+                    CreateCar();
                     break;
             }
+        }
+
+        private static void CreateCar()
+        {
+            Console.WriteLine("Create Car");
+            Console.Write("Input Plate[ABC123]: ");
+            string input1 = Console.ReadLine().ToUpper().Trim();
+            Console.Write("Input Make: ");
+            string input2 = Console.ReadLine().Trim();
+            Console.Write("Input Color: ");
+            string input3 = Console.ReadLine().Trim();
+            int rowsAffected = 0;
+            rowsAffected = DatabasDapper.CreateCars(input1, input2, input3);
+            Console.WriteLine(rowsAffected + " cars created with plate " + input1);
         }
 
         private static void ManageSlots()
