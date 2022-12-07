@@ -128,7 +128,16 @@ namespace ParkingHouse
                     DatabasDapper.ParkCar(input1, input2);
                     break;
                 case '2':
-
+                    var cars2 = DatabasDapper.ListParkedCars();
+                    foreach(var car in cars2)
+                    {
+                        Console.WriteLine($"{car.ParkingSlotsId}\t{car.Plate}\t{car.Make}\t{car.Color}\t{car.SlotNumber}\t{car.HouseName}\t{car.CityName}");
+                    }
+                    Console.WriteLine("Input the parkingslot to unpark the car.");
+                    string input3 = Console.ReadLine().ToUpper();
+                    int affectedRows = 0;
+                    affectedRows=DatabasDapper.UnParkCar(input3);
+                    Console.WriteLine($"Rows affected: " +affectedRows);
                     break;
                 case '3':
 
@@ -250,5 +259,7 @@ namespace ParkingHouse
 
             return number;
         }
+
+    
     }
 }

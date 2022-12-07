@@ -152,5 +152,32 @@ namespace ParkingHouse.Models
             return car;
         }
 
+        public static int UnParkCar(string input1)
+        {
+            var sql = $"UPDATE Cars SET ParkingSlotsId = null WHERE Plate = '{input1}'";
+            int affectedRows = 0;
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                affectedRows = connection.Execute(sql);
+                connection.Close();
+            }
+            return affectedRows;
+        }
+        public static List<Models.CarUnpark> ListParkedCars()
+        {
+            var sql = $"SELECT \r\n    *\r\nFROM Cars C\r\n    Full JOIN ParkingSlots PS ON C.ParkingSlotsId = PS.Id\r\n    " +
+                $"JOIN ParkingHouses PH ON PH.Id = PS.ParkingHouseId\r\n    JOIN Cities CI ON CI.Id = PH.CityId\r\n\tWhere C.ParkingSlotsId > 0";
+            var cars =new List<Models.CarUnpark>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                cars= connection.Query<Models.CarUnpark>(sql).ToList();
+                connection.Close();
+            }
+            return cars;
+        }
     }
 }
