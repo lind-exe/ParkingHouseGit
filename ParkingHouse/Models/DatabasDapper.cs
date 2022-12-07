@@ -124,5 +124,33 @@ namespace ParkingHouse.Models
             }
             return affectedRows;
         }
+
+        public static int ParkCar(int input1, int input2)
+        {
+            var sql = $"UPDATE Cars SET ParkingSlotsId = {input1} WHERE Id = {input2}";
+            int affectedRows = 0;
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                affectedRows = connection.Execute(sql);
+                connection.Close();
+            }
+            return affectedRows;
+        }
+        public static List<Models.Car> AllCars()
+        {
+            var sql = $"SELECT * FROM Cars ";
+            var car = new List<Models.Car>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                car = connection.Query<Models.Car>(sql).ToList();
+                connection.Close();
+            }
+            return car;
+        }
+
     }
 }

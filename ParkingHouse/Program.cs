@@ -24,7 +24,7 @@ namespace ParkingHouse
             while (runProgram)
             {
                 Console.Clear();
-                Console.WriteLine($"1. View cities.\n2. Add city\n3. Manage parkinghouses & spots.\n4. Add parkinghouse.\n5. Manage cities." +
+                Console.WriteLine($"1. View cities.\n2. Add city\n3. Manage parkinghouses & spots.\n4. Add parkinghouse.\n5. Manage cities.\n6. Manage cars" +
                     $"\nA. Exit application");
                 var key = Console.ReadKey(true);
                 switch (key.KeyChar)
@@ -78,6 +78,7 @@ namespace ParkingHouse
                     case '6':
                         Console.Clear();
                         ManageCars();
+                        break;
                     case 'A':
                     case 'a':
                         runProgram = false;
@@ -105,7 +106,26 @@ namespace ParkingHouse
             switch (key.KeyChar)
             {
                 case '1':
-
+                    var allCities = DatabasDapper.AllCities();
+                    foreach (Models.City city in allCities)
+                    {
+                        Console.WriteLine($"{city.Id}\t{city.CityName}");
+                    }
+                    ManageCities();
+                    Console.WriteLine();
+                    var cars = DatabasDapper.AllCars();
+                    foreach(Models.Car car in cars)
+                    {
+                        Console.WriteLine($"{car.Id}\t{car.Plate}\t{car.Make}\t{car.Color}\t" +
+                            (car.ParkingSlotsId == null ? "Not Parked" : "Parked"));
+                    }
+                    Console.Write("Input the ParkingslotID: ");
+                    int input1 = 0;
+                    input1 = TryNumber(input1);
+                    Console.Write("Input´the ID of the car: ");
+                    int input2 = 0;
+                    input2 = TryNumber(input2);
+                    DatabasDapper.ParkCar(input1, input2);
                     break;
                 case '2':
 
@@ -180,12 +200,12 @@ namespace ParkingHouse
 
             var newSpot = DatabasDapper.AllParkingSlots2(input2);
             Console.ForegroundColor= ConsoleColor.Blue;
-            Console.WriteLine("Slotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake\tColor");
+            Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake\tColor");
             Console.ResetColor();
             foreach (Models.Freespots spot in newSpot)
             {
                 
-                Console.WriteLine($"{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
+                Console.WriteLine($"{spot.Id}\t{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
                     $"\t{spot.ParkingHouseId}\t\t" +
                     (spot.ParkingSlotsId == null ? "Free spot" : "Occupied") + $"\t{spot.Plate}\t{spot.Make}\t{spot.Color}");
             }

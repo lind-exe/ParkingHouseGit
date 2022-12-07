@@ -9,7 +9,7 @@ namespace ParkingHouse.Models
 {
     internal class Freespots
     {
-        //public int Id { get; set; }
+        public int Id { get; }
         public int SlotNumber { get; set; }
         public int ElectricOutlet { get; set; }
         public int ParkingHouseId { get; set; }
