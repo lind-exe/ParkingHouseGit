@@ -56,6 +56,19 @@ namespace ParkingHouse.Models
             }
             return houses;
         }
+        public static List<Models.ParkingHouse> AllParkingHouses(int input)
+        {
+            var sql = $"SELECT * FROM ParkingHouses WHERE CityId = {input}";
+            var houses = new List<Models.ParkingHouse>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
+                connection.Close();
+            }
+            return houses;
+        }
         public static int InsertParkingHouse(Models.ParkingHouse ph)
         {
             var sql = $"insert into ParkingHouses(HouseName) values ('{ph.HouseName}')";
@@ -80,6 +93,19 @@ namespace ParkingHouse.Models
             {
                 connection.Open();
                 slots = connection.Query<Models.ParkingSlot>(sql).ToList();
+                connection.Close();
+            }
+            return slots;
+        }
+        public static List<Models.Freespots> AllParkingSlots2(int input)
+        {
+            var sql = $"SELECT * FROM ParkingSlots PS\r\nfull JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
+            var slots = new List<Models.Freespots>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                slots = connection.Query<Models.Freespots>(sql).ToList();
                 connection.Close();
             }
             return slots;
