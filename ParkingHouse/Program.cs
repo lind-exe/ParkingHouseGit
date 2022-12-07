@@ -29,7 +29,7 @@ namespace ParkingHouse
                 var key = Console.ReadKey(true);
                 switch (key.KeyChar)
                 {
-                    case '1':
+                    case '1':                       //Visa cities
                         Console.Clear();
                         var newCities = DatabasDapper.AllCities();
                         foreach (Models.City city in newCities)
@@ -37,7 +37,7 @@ namespace ParkingHouse
                             Console.WriteLine($"{city.Id}\t{city.CityName}");
                         }
                         break;
-                    case '2':
+                    case '2':                       //Lägga till city
                         Console.Clear();
                         Console.Write("Input city name: ");
                         var newCity = new Models.City
@@ -47,7 +47,7 @@ namespace ParkingHouse
                         int rowAffected = DatabasDapper.InsertCity(newCity);
                         Console.WriteLine(rowAffected + " city has been added.");
                         break;
-                    case '3':
+                    case '3':                       //Se parkeringshus
                         Console.Clear();
                         var newHouses = DatabasDapper.AllParkingHouses();
                         foreach (Models.ParkingHouse pHouse in newHouses)
@@ -56,7 +56,7 @@ namespace ParkingHouse
                         }
                         ManageSlots();
                         break;
-                    case '4':
+                    case '4':                       //Lägga till parkeringshus
                         Console.Clear();
                         Console.Write("Input parkinghouse name: ");
                         var newParkinghouse = new Models.ParkingHouse
