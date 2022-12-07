@@ -75,6 +75,9 @@ namespace ParkingHouse
                         }
                         ManageCities();
                         break;
+                    case '6':
+                        Console.Clear();
+                        ManageCars();
                     case 'A':
                     case 'a':
                         runProgram = false;
@@ -93,6 +96,24 @@ namespace ParkingHouse
 
 
 
+        }
+
+        private static void ManageCars()
+        {
+            Console.WriteLine("1. Park car\n2. Unpark car\n3. Create car");
+            var key = Console.ReadKey(true);
+            switch (key.KeyChar)
+            {
+                case '1':
+
+                    break;
+                case '2':
+
+                    break;
+                case '3':
+
+                    break;
+            }
         }
 
         private static void ManageSlots()
