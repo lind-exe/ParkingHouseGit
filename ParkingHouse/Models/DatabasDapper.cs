@@ -69,9 +69,22 @@ namespace ParkingHouse.Models
             }
             return houses;
         }
-        public static int InsertParkingHouse(Models.ParkingHouse ph)
+        public static int InsertParkingHouse()
         {
-            var sql = $"insert into ParkingHouses(HouseName) values ('{ph.HouseName}')";
+            var ph = new Models.ParkingHouse();
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("Input house name: ");
+            ph.HouseName = Console.ReadLine();
+            var allCities = DatabasDapper.AllCities();
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            foreach (Models.City city in allCities)
+            {
+                Console.WriteLine($"{city.Id}\t{city.CityName}");
+            }
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("Input city ID");
+            ph.CityId = Program.TryNumber(ph.CityId);
+            var sql = $"insert into ParkingHouses(HouseName, CityId) values ('{ph.HouseName}', {ph.CityId})";
 
             int affectedRows = 0;
 
@@ -101,7 +114,8 @@ namespace ParkingHouse.Models
         // ÄNDRA HÄR! TA BORT STJÄRNA OCH VÄLJ ETT ALIAS FÖR ID OM VI VILL HA FLER.
         public static List<Models.Freespots> AllParkingSlots2(int input)
         {
-            var sql = $"SELECT * FROM ParkingSlots PS\r\nfull JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
+            //var sql = $"SELECT * FROM ParkingSlots PS\r\nfull JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
+            var sql = $"\tSELECT PS.Id AS 'SlotID', PS.SlotNumber, PS.ElectricOutlet, PS.ParkingHouseId, C.ParkingSlotsId, C.Plate, C.Make, C.Color FROM ParkingSlots PS full JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
             var slots = new List<Models.Freespots>();
 
             using (var connection = new SqlConnection(connString))

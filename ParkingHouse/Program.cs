@@ -58,12 +58,7 @@ namespace ParkingHouse
                         break;
                     case '4':                       //Lägga till parkeringshus
                         Console.Clear();
-                        Console.Write("Input parkinghouse name: ");
-                        var newParkinghouse = new Models.ParkingHouse
-                        {
-                            HouseName = Console.ReadLine()
-                        };
-                        int rowAffected1 = DatabasDapper.InsertParkingHouse(newParkinghouse);
+                        int rowAffected1 = DatabasDapper.InsertParkingHouse();
                         Console.WriteLine(rowAffected1 + " parkinghouse has been added.");
                         break;
                     case '5':
@@ -106,6 +101,7 @@ namespace ParkingHouse
             switch (key.KeyChar)
             {
                 case '1':
+                    Console.Clear();
                     var allCities = DatabasDapper.AllCities();
                     foreach (Models.City city in allCities)
                     {
@@ -114,18 +110,26 @@ namespace ParkingHouse
                     ManageCities();
                     Console.WriteLine();
                     var cars = DatabasDapper.AllCars();
-                    foreach(Models.Car car in cars)
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Car ID\tPlate\tMake\tColor\tParking spot\t");
+                    Console.ResetColor();
+                    foreach (Models.Car car in cars)
                     {
                         Console.WriteLine($"{car.Id}\t{car.Plate}\t{car.Make}\t{car.Color}\t" +
                             (car.ParkingSlotsId == null ? "Not Parked" : "Parked"));
                     }
-                    Console.Write("Input the ParkingslotID: ");
+                    Console.WriteLine();
+                    Console.ForegroundColor= ConsoleColor.Red;
+                    Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    Console.ResetColor();
+                    Console.Write("Input the SlotID: ");
                     int input1 = 0;
                     input1 = TryNumber(input1);
-                    Console.Write("Input´the ID of the car: ");
+                    Console.Write("Input the ID of the car: ");
                     int input2 = 0;
                     input2 = TryNumber(input2);
                     DatabasDapper.ParkCar(input1, input2);
+                    Console.WriteLine("Car has been parked");
                     break;
                 case '2':
                     var cars2 = DatabasDapper.ListParkedCars();
@@ -211,16 +215,16 @@ namespace ParkingHouse
             int input = 0;
             input = TryNumber(input);
 
+            Console.Clear();
             var selectedHouse = DatabasDapper.AllParkingHouses(input);
             foreach (Models.ParkingHouse house in selectedHouse)
             {
                 Console.WriteLine($"{house.Id}\t{house.HouseName}\t");
             }
-
             Console.WriteLine("\nInput Id-number of the parkinghouse you wish to manage.\n");
             int input2 = 0;
             input2 = TryNumber(input2);
-
+            Console.Clear();
             var newSpot = DatabasDapper.AllParkingSlots2(input2);
             Console.ForegroundColor= ConsoleColor.Blue;
             Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake\tColor");
@@ -228,15 +232,18 @@ namespace ParkingHouse
             foreach (Models.Freespots spot in newSpot)
             {
                 
-                Console.WriteLine($"{spot.Id}\t{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
+                Console.WriteLine($"{spot.SlotID}\t{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
                     $"\t{spot.ParkingHouseId}\t\t" +
                     (spot.ParkingSlotsId == null ? "Free spot" : "Occupied") + $"\t{spot.Plate}\t{spot.Make}\t{spot.Color}");
             }
+            Console.ForegroundColor= ConsoleColor.Red;
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.ResetColor();
         }
 
 
 
-        private static int TryNumber(int number)
+        internal static int TryNumber(int number)
         {
             bool correctInput = false;
 
