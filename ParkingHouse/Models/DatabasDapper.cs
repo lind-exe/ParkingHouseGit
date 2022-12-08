@@ -103,7 +103,7 @@ namespace ParkingHouse.Models
         // SELECT Electric Spots Per ParkingHouse
         public static List<Models.QUERYElectric> ElectricSpotsParkingHouse()
         {
-            var sql = "SELECT \r\n    C.CityName,\r\n    PH.HouseName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpotsParkingHouse\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY PH.HouseName, C.CityName";
+            var sql = "SELECT C.CityName, PH.HouseName, COUNT(ElectricOutlet) AS ElectricSpots FROM ParkingHouses PH JOIN Cities C ON C.Id = PH.CityId JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id GROUP BY PH.HouseName, C.CityName";
             var query = new List<Models.QUERYElectric>();
             using (var connection = new SqlConnection(connString))
             {
@@ -117,7 +117,7 @@ namespace ParkingHouse.Models
         // SELECT Electric Spots Per City
         public static List<Models.QUERYElectric> ElectricSpotsCity()
         {
-            var sql = "SELECT \r\n    C.CityName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpotsParkingHouse\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY C.CityName";
+            var sql = "SELECT \r\n    C.CityName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpots\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY C.CityName";
             var query = new List<Models.QUERYElectric>();
             using (var connection = new SqlConnection(connString))
             {
