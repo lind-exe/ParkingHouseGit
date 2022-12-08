@@ -73,24 +73,23 @@ namespace ParkingHouse
                         Console.Clear();
                         ManageCars();
                         break;
-                    case '7':
+                    case '7':                       // Queries
                         Console.Clear();
                         SQLQueries();
                         break;
-                    case 'A':
+                    case 'A':                       // Close app
                     case 'a':
                         runProgram = false;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("Wrong input, try again.");
+                        Console.WriteLine("Wrong input, try again."); // In case of, should never reach this
                         break;
                 }
-                Console.WriteLine("\nPress enter to continue.");
-                Console.ReadLine();
+
+                PressEnter();
             }
         }
-
 
 
 
@@ -146,7 +145,7 @@ namespace ParkingHouse
                 // ELectric Spot Per House
                 case '1':
                     Console.Clear();
-                    var query1 = DatabasDapper.ElectricSpots();
+                    var query1 = DatabasDapper.ElectricSpotsParkingHouse();
                     Console.ForegroundColor= ConsoleColor.Blue;
                     Console.WriteLine("City   \t\t\tParking house   \t# of electric spots");
                     Console.ResetColor();
@@ -158,7 +157,7 @@ namespace ParkingHouse
                     // E Spot Per City
                 case '2':
                     Console.Clear();
-                    var query2 = DatabasDapper.ElectricSpots2();
+                    var query2 = DatabasDapper.ElectricSpotsCity();
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("City   \t\t# of electric spots");
                     Console.ResetColor();
@@ -204,17 +203,20 @@ namespace ParkingHouse
                 // Par car
                 case '1':
                     Console.Clear();
+                    // Table all Cities
                     var allCities = DatabasDapper.AllCities();
                     foreach (Models.City city in allCities)
                     {
                         Console.WriteLine($"{city.Id}\t{city.CityName}");
                     }
+                    // Tables for houses and spots
                     ManageCities();
                     Console.WriteLine();
                     var cars = DatabasDapper.AllCars();
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Car ID\tPlate\tMake     \tColor\tParking spot\t");
                     Console.ResetColor();
+                    // Table Cars with spots
                     foreach (Models.Car car in cars)
                     {
                         Console.WriteLine($"{car.Id}\t{car.Plate}\t{car.Make}     \t{car.Color}\t" +
@@ -224,6 +226,7 @@ namespace ParkingHouse
                     Console.ForegroundColor= ConsoleColor.Red;
                     Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                     Console.ResetColor();
+                    // Park a car
                     Console.Write("Input the SlotID: ");
                     int input1 = 0;
                     input1 = TryNumber(input1);
@@ -299,7 +302,7 @@ namespace ParkingHouse
                     Console.Write("Input parking spot number: ");
                     answer1 = TryNumber(answer1);
                     Console.Write("Input 1 if it has an electric outlet, 0 if it doesn't: ");
-                    answer2 = TryNumber2(answer2);
+                    answer2 = TryNumberLikeBool(answer2);
                     var newParkingslot = new Models.ParkingSlot
                     {
                         SlotNumber = answer1,
@@ -311,22 +314,16 @@ namespace ParkingHouse
 
                     break;
             }
-
-
-
-
-
-
-
         }
 
         // View Cities and ParkingHouses
         private static void ManageCities()
         {
+            
             Console.Write("\nInput Id-number of the city you wish to manage: ");
             int input = 0;
             input = TryNumber(input);
-
+            // Table ParkingHouses
             Console.Clear();
             var selectedHouse = DatabasDapper.AllParkingHouses(input);
             foreach (Models.ParkingHouse house in selectedHouse)
@@ -337,8 +334,9 @@ namespace ParkingHouse
             int input2 = 0;
             input2 = TryNumber(input2);
             Console.Clear();
-            var newSpot = DatabasDapper.AllParkingSlots2(input2);
+            var newSpot = DatabasDapper.AllFreeParkingSlots(input2);
             Console.ForegroundColor= ConsoleColor.Blue;
+            // Table Spots
             Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake     \tColor");
             Console.ResetColor();
             foreach (Models.Freespots spot in newSpot)
@@ -352,8 +350,6 @@ namespace ParkingHouse
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.ResetColor();
         }
-
-
 
         // Write number safely
         internal static int TryNumber(int number)
@@ -374,7 +370,9 @@ namespace ParkingHouse
 
             return number;
         }
-        private static int TryNumber2(int number)
+
+        // Try int like bool
+        private static int TryNumberLikeBool(int number)
         {
             bool correctInput = false;
 
@@ -391,6 +389,17 @@ namespace ParkingHouse
             }
 
             return number;
+        }
+
+        // Press enter blue
+        static void PressEnter()
+        {
+            Console.Write("\nPress ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("enter ");
+            Console.ResetColor();
+            Console.WriteLine("to continue.");
+            Console.ReadLine();
         }
     }
 }

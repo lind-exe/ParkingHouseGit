@@ -28,10 +28,82 @@ namespace ParkingHouse.Models
             return cities;
         }
 
-        // SELECT Electric Spots Per ParkingHouse
-        public static List<Models.QUERYElectric> ElectricSpots()
+        // SELECT * FROM Cars 
+        public static List<Models.Car> AllCars()
         {
-            var sql = "SELECT \r\n    C.CityName,\r\n    PH.HouseName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpots\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY PH.HouseName, C.CityName";
+            var sql = $"SELECT * FROM Cars ";
+            var car = new List<Models.Car>();
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                car = connection.Query<Models.Car>(sql).ToList();
+                connection.Close();
+            }
+            return car;
+        }
+
+        // SELECT * FROM ParkingHouses
+        public static List<Models.ParkingHouse> AllParkingHouses()
+        {
+            var sql = "SELECT * FROM ParkingHouses";
+            var houses = new List<Models.ParkingHouse>();
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
+                connection.Close();
+            }
+            return houses;
+        }
+
+        // SELECT * FROM ParkingHouse Per city OVERLOAD from AllParkingHouses()
+        public static List<Models.ParkingHouse> AllParkingHouses(int input)
+        {
+            var sql = $"SELECT * FROM ParkingHouses WHERE CityId = {input}";
+            var houses = new List<Models.ParkingHouse>();
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
+                connection.Close();
+            }
+            return houses;
+        }
+
+        // SELECT * FROM ParkingSlots Per ParkingHouse
+        public static List<Models.ParkingSlot> AllParkingSlots(int input)
+        {
+            var sql = $"SELECT * FROM ParkingSlots WHERE ParkingHouseId = {input}";
+            var slots = new List<Models.ParkingSlot>();
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                slots = connection.Query<Models.ParkingSlot>(sql).ToList();
+                connection.Close();
+            }
+            return slots;
+        }
+
+        // See if Spots are free in a ParkingHouse
+        public static List<Models.Freespots> AllFreeParkingSlots(int input)
+        {
+            var sql = $"\tSELECT PS.Id AS 'SlotID', PS.SlotNumber, PS.ElectricOutlet, " +
+                $"PS.ParkingHouseId, C.ParkingSlotsId, C.Plate, C.Make, C.Color FROM ParkingSlots PS " +
+                $"full JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
+            var slots = new List<Models.Freespots>();
+            using (var connection = new SqlConnection(connString))
+            {
+                connection.Open();
+                slots = connection.Query<Models.Freespots>(sql).ToList();
+                connection.Close();
+            }
+            return slots;
+        }
+
+        // SELECT Electric Spots Per ParkingHouse
+        public static List<Models.QUERYElectric> ElectricSpotsParkingHouse()
+        {
+            var sql = "SELECT \r\n    C.CityName,\r\n    PH.HouseName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpotsParkingHouse\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY PH.HouseName, C.CityName";
             var query = new List<Models.QUERYElectric>();
             using (var connection = new SqlConnection(connString))
             {
@@ -43,9 +115,9 @@ namespace ParkingHouse.Models
         }
 
         // SELECT Electric Spots Per City
-        public static List<Models.QUERYElectric> ElectricSpots2()
+        public static List<Models.QUERYElectric> ElectricSpotsCity()
         {
-            var sql = "SELECT \r\n    C.CityName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpots\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY C.CityName";
+            var sql = "SELECT \r\n    C.CityName,\r\n    CONCAT(COUNT(ElectricOutlet), ' ') ElectricSpotsParkingHouse\r\nFROM \r\n    ParkingHouses PH \r\n    JOIN Cities C ON C.Id = PH.CityId\r\n    JOIN ParkingSlots PS ON PS.ParkingHouseId = PH.Id\r\nGROUP BY C.CityName";
             var query = new List<Models.QUERYElectric>();
             using (var connection = new SqlConnection(connString))
             {
@@ -68,34 +140,6 @@ namespace ParkingHouse.Models
                 connection.Close();
             }
             return affectedRows;
-        }
-
-        // SELECT * FROM ParkingHouses
-        public static List<Models.ParkingHouse> AllParkingHouses()
-        {
-            var sql = "SELECT * FROM ParkingHouses";
-            var houses = new List<Models.ParkingHouse>();
-            using (var connection = new SqlConnection(connString))
-            {
-                connection.Open();
-                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
-                connection.Close();
-            }
-            return houses;
-        }
-
-        // SELECT * FROM ParkingHouse Per city
-        public static List<Models.ParkingHouse> AllParkingHouses(int input)
-        {
-            var sql = $"SELECT * FROM ParkingHouses WHERE CityId = {input}";
-            var houses = new List<Models.ParkingHouse>();
-            using (var connection = new SqlConnection(connString))
-            {
-                connection.Open();
-                houses = connection.Query<Models.ParkingHouse>(sql).ToList();
-                connection.Close();
-            }
-            return houses;
         }
 
         // Add new Parkinghouse (choose which city)
@@ -123,36 +167,6 @@ namespace ParkingHouse.Models
                 connection.Close();
             }
             return affectedRows;
-        }
-
-        // SELECT * FROM ParkingSlots Per ParkingHouse
-        public static List<Models.ParkingSlot> AllParkingSlots(int input)
-        {
-            var sql = $"SELECT * FROM ParkingSlots WHERE ParkingHouseId = {input}";
-            var slots = new List<Models.ParkingSlot>();
-            using (var connection = new SqlConnection(connString))
-            {
-                connection.Open();
-                slots = connection.Query<Models.ParkingSlot>(sql).ToList();
-                connection.Close();
-            }
-            return slots;
-        }
-
-        // See if Spots are free in a ParkingHouse
-        public static List<Models.Freespots> AllParkingSlots2(int input)
-        {
-            var sql = $"\tSELECT PS.Id AS 'SlotID', PS.SlotNumber, PS.ElectricOutlet, " +
-                $"PS.ParkingHouseId, C.ParkingSlotsId, C.Plate, C.Make, C.Color FROM ParkingSlots PS " +
-                $"full JOIN Cars C ON C.ParkingSlotsId = PS.Id WHERE PS.ParkingHouseId = {input}";
-            var slots = new List<Models.Freespots>();
-            using (var connection = new SqlConnection(connString))
-            {
-                connection.Open();
-                slots = connection.Query<Models.Freespots>(sql).ToList();
-                connection.Close();
-            }
-            return slots;
         }
 
         // Add ParkingSpot
@@ -212,19 +226,6 @@ namespace ParkingHouse.Models
             return affectedRows;
         }
 
-        // SELECT * FROM Cars 
-        public static List<Models.Car> AllCars()
-        {
-            var sql = $"SELECT * FROM Cars ";
-            var car = new List<Models.Car>();
-            using (var connection = new SqlConnection(connString))
-            {
-                connection.Open();
-                car = connection.Query<Models.Car>(sql).ToList();
-                connection.Close();
-            }
-            return car;
-        }
 
         // See if parked Car have been removed
         public static List<Models.CarUnpark> ListParkedCars()
