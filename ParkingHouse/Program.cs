@@ -38,10 +38,16 @@ namespace ParkingHouse
                         break;
                     case '2':                       // Add City
                         Console.Clear();
+                        Console.WriteLine("[Press 'a' to go back]");
                         Console.Write("Input city name: ");
+                        var input = Console.ReadLine();
+                        if (input.ToLower().Trim() == "a")
+                        {
+                            break;
+                        }
                         var newCity = new Models.City
                         {
-                            CityName = Console.ReadLine()
+                            CityName = input
                         };
                         int rowAffected = DatabasDapper.InsertCity(newCity);
                         Console.WriteLine(rowAffected + " city has been added.");
@@ -57,6 +63,13 @@ namespace ParkingHouse
                         break;
                     case '4':                       // Add ParkingHouse
                         Console.Clear();
+                        Console.WriteLine("[Press 'a' to go back]");
+                        Console.WriteLine("[Press ENTER to continue adding a ParkingHouse]");
+                        var input1 = Console.ReadLine();
+                        if (input1.ToLower().Trim() == "a")
+                        {
+                            break;
+                        }
                         int rowAffected1 = DatabasDapper.InsertParkingHouse();
                         Console.WriteLine(rowAffected1 + " parkinghouse has been added.");
                         break;
@@ -137,7 +150,7 @@ namespace ParkingHouse
         // E Spots per House - E Spots per City - # of Parked Cars - # of Free Spots
         private static void SQLQueries()
         {
-            
+
             Console.WriteLine("1. Electric spots per house\n2. Electric spots per city\n3. # of parked cars in total\n4. # of free spots per city");
             var key = Console.ReadKey(true);
             switch (key.KeyChar)
@@ -146,7 +159,7 @@ namespace ParkingHouse
                 case '1':
                     Console.Clear();
                     var query1 = DatabasDapper.ElectricSpotsParkingHouse();
-                    Console.ForegroundColor= ConsoleColor.Blue;
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("City   \t\t\tParking house   \t# of electric spots");
                     Console.ResetColor();
                     foreach (var house in query1)
@@ -154,7 +167,7 @@ namespace ParkingHouse
                         Console.WriteLine($"{house.CityName}   \t\t{house.HouseName}    \t\t{house.ElectricSpots} st");
                     }
                     break;
-                    // E Spot Per City
+                // E Spot Per City
                 case '2':
                     Console.Clear();
                     var query2 = DatabasDapper.ElectricSpotsCity();
@@ -166,7 +179,7 @@ namespace ParkingHouse
                         Console.WriteLine($"{city.CityName}   \t{city.ElectricSpots} st");
                     }
                     break;
-                    // # of parked Cars
+                // # of parked Cars
                 case '3':
                     Console.Clear();
                     var query3 = DatabasDapper.QUERYListParkedCars();
@@ -178,7 +191,7 @@ namespace ParkingHouse
                         Console.WriteLine($"{car.Plate}\t{car.Make}\t{car.Color}\t{car.ParkingSlotId}\t{car.HouseName}    \t{car.CityName}");
                     }
                     break;
-                    // Free spots Per City
+                // Free spots Per City
                 case '4':
                     Console.Clear();
                     var query4 = DatabasDapper.QUERYListFreeSpots();
@@ -223,7 +236,7 @@ namespace ParkingHouse
                             (car.ParkingSlotsId == null ? "Not Parked" : "Parked"));
                     }
                     Console.WriteLine();
-                    Console.ForegroundColor= ConsoleColor.Red;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                     Console.ResetColor();
                     // Park a car
@@ -236,20 +249,20 @@ namespace ParkingHouse
                     DatabasDapper.ParkCar(input1, input2);
                     Console.WriteLine("Car has been parked");
                     break;
-                    // Unpark Car
+                // Unpark Car
                 case '2':
                     var cars2 = DatabasDapper.ListParkedCars();
-                    foreach(Models.CarUnpark car in cars2)
+                    foreach (Models.CarUnpark car in cars2)
                     {
                         Console.WriteLine($"{car.Id}\t{car.Plate}\t{car.Make}\t{car.Color}\t{car.ParkingSlotsId}\t{car.HouseName}\t{car.CityName}");
                     }
                     Console.Write("Input the plate[ABC123] to unpark the car: ");
                     string input3 = Console.ReadLine().ToUpper();
                     int affectedRows = 0;
-                    affectedRows=DatabasDapper.UnParkCar(input3);
-                    Console.WriteLine($"Rows affected: " +affectedRows);
+                    affectedRows = DatabasDapper.UnParkCar(input3);
+                    Console.WriteLine($"Rows affected: " + affectedRows);
                     break;
-                    // Create Car
+                // Create Car
                 case '3':
                     CreateCar();
                     break;
@@ -280,7 +293,7 @@ namespace ParkingHouse
             input = TryNumber(input);
             Console.Clear();
             var newSpot = DatabasDapper.AllParkingSlots(input);
-            Console.ForegroundColor= ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Id\tSlotNumber\tElectric");
             Console.ResetColor();
             foreach (Models.ParkingSlot spot in newSpot)
@@ -319,7 +332,7 @@ namespace ParkingHouse
         // View Cities and ParkingHouses
         private static void ManageCities()
         {
-            
+
             Console.Write("\nInput Id-number of the city you wish to manage: ");
             int input = 0;
             input = TryNumber(input);
@@ -335,18 +348,18 @@ namespace ParkingHouse
             input2 = TryNumber(input2);
             Console.Clear();
             var newSpot = DatabasDapper.AllFreeParkingSlots(input2);
-            Console.ForegroundColor= ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Blue;
             // Table Spots
             Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake     \tColor");
             Console.ResetColor();
             foreach (Models.Freespots spot in newSpot)
             {
-                
+
                 Console.WriteLine($"{spot.SlotID}\t{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
                     $"\t{spot.ParkingHouseId}\t\t" +
                     (spot.ParkingSlotsId == null ? "Free spot" : "Occupied") + $"\t{spot.Plate}\t{spot.Make}     \t{spot.Color}");
             }
-            Console.ForegroundColor= ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.ResetColor();
         }
