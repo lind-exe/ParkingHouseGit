@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +13,11 @@ namespace ParkingHouse.Models
         public string Make { get; set; }
         public string Color { get; set; }
         public int ParkingSlotsId { get; set; }
+        public int ParkingSlotId { get; set; }
         public string HouseName { get; set; }
         public string CityName { get; set; }
-        
+        public int FreeSpots { get; set; }
+
 
     }
 }

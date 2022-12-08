@@ -8,23 +8,13 @@ namespace ParkingHouse
         {
             RunCity();
         }
-
-
-
-
-
-
-
         static void RunCity()
         {
             bool runProgram = true;
-
-
-
             while (runProgram)
             {
                 Console.Clear();
-                Console.WriteLine($"1. View cities.\n2. Add city\n3. Manage parkinghouses & spots.\n4. Add parkinghouse.\n5. Manage cities.\n6. Manage cars" +
+                Console.WriteLine($"1. View cities.\n2. Add city\n3. Manage parkinghouses & spots.\n4. Add parkinghouse.\n5. Manage cities.\n6. Manage cars\n7. SQL Queries" +
                     $"\nA. Exit application");
                 var key = Console.ReadKey(true);
                 switch (key.KeyChar)
@@ -74,6 +64,10 @@ namespace ParkingHouse
                         Console.Clear();
                         ManageCars();
                         break;
+                    case '7':
+                        Console.Clear();
+                        SQLQueries();
+                        break;
                     case 'A':
                     case 'a':
                         runProgram = false;
@@ -85,15 +79,61 @@ namespace ParkingHouse
                 }
                 Console.WriteLine("\nPress enter to continue.");
                 Console.ReadLine();
-
             }
-
-
-
-
-
         }
-
+        private static void SQLQueries()
+        {
+            
+            Console.WriteLine("1. Electric spots per house\n2. Electric spots per city\n3. # of parked cars in total\n4. # of free spots per city");
+            var key = Console.ReadKey(true);
+            switch (key.KeyChar)
+            {
+                case '1':
+                    Console.Clear();
+                    var query1 = DatabasDapper.ElectricSpots();
+                    Console.ForegroundColor= ConsoleColor.Blue;
+                    Console.WriteLine("City   \t\t\tParking house   \t# of electric spots");
+                    Console.ResetColor();
+                    foreach (var house in query1)
+                    {
+                        Console.WriteLine($"{house.CityName}   \t\t{house.HouseName}    \t\t{house.ElectricSpots} st");
+                    }
+                    break;
+                case '2':
+                    Console.Clear();
+                    var query2 = DatabasDapper.ElectricSpots2();
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("City   \t\t# of electric spots");
+                    Console.ResetColor();
+                    foreach (var city in query2)
+                    {
+                        Console.WriteLine($"{city.CityName}   \t{city.ElectricSpots} st");
+                    }
+                    break;
+                case '3':
+                    Console.Clear();
+                    var query3 = DatabasDapper.QUERYListParkedCars();
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Plate\tMake\tColor\tSlotID\tParking house\tCity");
+                    Console.ResetColor();
+                    foreach (var car in query3)
+                    {
+                        Console.WriteLine($"{car.Plate}\t{car.Make}\t{car.Color}\t{car.ParkingSlotId}\t{car.HouseName}    \t{car.CityName}");
+                    }
+                    break;
+                case '4':
+                    Console.Clear();
+                    var query4 = DatabasDapper.QUERYListFreeSpots();
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("City   \t\t# of free spots");
+                    Console.ResetColor();
+                    foreach (var car in query4)
+                    {
+                        Console.WriteLine($"{car.CityName}    \t{car.FreeSpots}");
+                    }
+                    break;
+            }
+        }
         private static void ManageCars()
         {
             Console.WriteLine("1. Park car\n2. Unpark car\n3. Create car");
@@ -148,7 +188,6 @@ namespace ParkingHouse
                     break;
             }
         }
-
         private static void CreateCar()
         {
             Console.WriteLine("Create Car");
@@ -162,7 +201,6 @@ namespace ParkingHouse
             rowsAffected = DatabasDapper.CreateCars(input1, input2, input3);
             Console.WriteLine(rowsAffected + " cars created with plate " + input1);
         }
-
         private static void ManageSlots()
         {
             Console.Write("\nInput Id-number of the parkinghouse you wish to manage: ");
@@ -208,7 +246,6 @@ namespace ParkingHouse
 
 
         }
-
         private static void ManageCities()
         {
             Console.Write("\nInput Id-number of the city you wish to manage: ");
@@ -240,9 +277,6 @@ namespace ParkingHouse
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.ResetColor();
         }
-
-
-
         internal static int TryNumber(int number)
         {
             bool correctInput = false;
@@ -261,7 +295,6 @@ namespace ParkingHouse
 
             return number;
         }
-
         private static int TryNumber2(int number)
         {
             bool correctInput = false;
@@ -280,7 +313,5 @@ namespace ParkingHouse
 
             return number;
         }
-
-    
     }
 }
