@@ -60,7 +60,7 @@ namespace ParkingHouse
                         int rowAffected1 = DatabasDapper.InsertParkingHouse();
                         Console.WriteLine(rowAffected1 + " parkinghouse has been added.");
                         break;
-                    case '5':
+                    case '5':                       // Manage Cities
                         Console.Clear();
                         var allCities = DatabasDapper.AllCities();
                         foreach (Models.City city in allCities)
@@ -339,17 +339,17 @@ namespace ParkingHouse
             Console.Clear();
             var newSpot = DatabasDapper.AllParkingSlots2(input2);
             Console.ForegroundColor= ConsoleColor.Blue;
-            Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake\tColor");
+            Console.WriteLine("SlotId\tSlotnumber\tElectric\t\tParking house\tParking spot\tPlate\tMake     \tColor");
             Console.ResetColor();
             foreach (Models.Freespots spot in newSpot)
             {
                 
                 Console.WriteLine($"{spot.SlotID}\t{spot.SlotNumber}\t\t" + (spot.ElectricOutlet == 0 ? "No electric outlet" : "Has electric outlet") +
                     $"\t{spot.ParkingHouseId}\t\t" +
-                    (spot.ParkingSlotsId == null ? "Free spot" : "Occupied") + $"\t{spot.Plate}\t{spot.Make}\t{spot.Color}");
+                    (spot.ParkingSlotsId == null ? "Free spot" : "Occupied") + $"\t{spot.Plate}\t{spot.Make}     \t{spot.Color}");
             }
             Console.ForegroundColor= ConsoleColor.Red;
-            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.ResetColor();
         }
 
